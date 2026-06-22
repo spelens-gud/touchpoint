@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import type { KeyboardEvent } from 'react';
 import type { SkillCategory } from '../../types';
 import s from './SkillTree.module.scss';
 
@@ -40,6 +41,12 @@ export default function SkillTree({ categories, expanded }: SkillTreeProps) {
   const handleLeafTap = useCallback((skillId: string) => {
     setTappedId(prev => (prev === skillId ? null : skillId));
   }, []);
+
+  const handleLeafKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>, skillId: string) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    handleLeafTap(skillId);
+  }, [handleLeafTap]);
 
   useEffect(() => {
     const desc = activeSkill?.description ?? '';
@@ -112,7 +119,14 @@ export default function SkillTree({ categories, expanded }: SkillTreeProps) {
                           } as React.CSSProperties}
                           onMouseEnter={() => setHoveredId(skill.id)}
                           onMouseLeave={() => setHoveredId(null)}
+                          onFocus={() => setHoveredId(skill.id)}
+                          onBlur={() => setHoveredId(null)}
                           onClick={() => handleLeafTap(skill.id)}
+                          onKeyDown={(event) => handleLeafKeyDown(event, skill.id)}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Inspect ${skill.name}, level ${skill.level}`}
+                          aria-pressed={isActive}
                         >
                           <div className={s.leafRow}>
                             <span className={s.leafName}>{skill.name}</span>

@@ -8,6 +8,7 @@ import type { AppContextValue, SystemNotice } from '../types';
 
 const AppContext = createContext<AppContextValue | null>(null);
 const NOTICE_LIFETIME_MS = 2400;
+const MAX_NOTICE_QUEUE = 6;
 
 interface AppProviderProps {
   children: ReactNode;
@@ -31,22 +32,45 @@ export function AppProvider({ children }: AppProviderProps) {
 
   const [systemNotice, setSystemNotice] = useState<SystemNotice | null>(null);
   const noticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const noticeQueueRef = useRef<SystemNotice[]>([]);
+  const noticeVisibleRef = useRef(false);
+  const noticeIdRef = useRef(Date.now());
   const wasInvertedRef = useRef(isInverted);
 
-  const pushSystemNotice = useCallback((text: string, tone: SystemNotice['tone'] = 'info') => {
-    if (noticeTimerRef.current) {
-      clearTimeout(noticeTimerRef.current);
-    }
-    setSystemNotice({ id: Date.now(), text, tone });
+  const showQueuedNotice = useCallback(() => {
+    if (noticeVisibleRef.current) return;
+
+    const nextNotice = noticeQueueRef.current.shift();
+    if (!nextNotice) return;
+
+    noticeVisibleRef.current = true;
+    setSystemNotice(nextNotice);
     noticeTimerRef.current = setTimeout(() => {
       setSystemNotice(null);
       noticeTimerRef.current = null;
+      noticeVisibleRef.current = false;
+      showQueuedNotice();
     }, NOTICE_LIFETIME_MS);
   }, []);
+
+  const pushSystemNotice = useCallback((text: string, tone: SystemNotice['tone'] = 'info') => {
+    if (noticeQueueRef.current.length >= MAX_NOTICE_QUEUE) {
+      noticeQueueRef.current.shift();
+    }
+
+    noticeQueueRef.current.push({
+      id: noticeIdRef.current++,
+      text,
+      tone,
+    });
+    showQueuedNotice();
+  }, [showQueuedNotice]);
 
   useEffect(() => {
     return () => {
       if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+      noticeQueueRef.current = [];
+      noticeVisibleRef.current = false;
     };
   }, []);
 

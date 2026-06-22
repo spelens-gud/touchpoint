@@ -3,6 +3,9 @@ import type { AnimationSequenceState, ColumnPhase } from '../types';
 
 const BOOT_SESSION_KEY = 'touchpoint:bootSeen:v1';
 
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export default function useAnimationSequence(): AnimationSequenceState {
   const [isLoading, setIsLoading] = useState(true);
   const [mainVisible, setMainVisible] = useState(false);
@@ -32,7 +35,7 @@ export default function useAnimationSequence(): AnimationSequenceState {
     setMainVisible(true);
 
     const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
-    const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reducedMotion = prefersReducedMotion();
     const returningVisitor = typeof window !== 'undefined' && window.sessionStorage.getItem(BOOT_SESSION_KEY) === '1';
 
     if (reducedMotion) {
@@ -129,6 +132,13 @@ export default function useAnimationSequence(): AnimationSequenceState {
     setPulsingReverseIndices(null);
     setColumnPhase('retracting');
 
+    if (prefersReducedMotion()) {
+      setLinesAnimated(false);
+      setColumnPhase('idle');
+      onComplete();
+      return;
+    }
+
     setTimeout(() => {
       setLinesAnimated(false);
       setColumnPhase('idle');
@@ -138,6 +148,16 @@ export default function useAnimationSequence(): AnimationSequenceState {
 
   const expandColumns = useCallback((onComplete?: () => void) => {
     setColumnPhase('expanding');
+
+    if (prefersReducedMotion()) {
+      setLinesAnimated(true);
+      setHudVisible(true);
+      setTextVisible(true);
+      setAnimationsComplete(true);
+      setColumnPhase('idle');
+      onComplete?.();
+      return;
+    }
 
     setTimeout(() => setLinesAnimated(true), 30);
     setTimeout(() => setHudVisible(true), 250);

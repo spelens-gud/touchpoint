@@ -147,6 +147,10 @@ $connector-w: 14px;
       border-top-color: $line-hover;
     }
   }
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .leafRow {
@@ -160,6 +164,11 @@ $connector-w: 14px;
   .hovered & {
     border-color: var(--ark-border);
     background-color: rgba(200, 200, 200, 0.025);
+  }
+
+  .leaf:focus-visible & {
+    border-color: var(--ark-primary);
+    background-color: rgba(var(--ark-primary-rgb), 0.06);
   }
 }
 
