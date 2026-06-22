@@ -1,0 +1,273 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - button "Skip boot sequence" [ref=e6]: ">SKIP BOOT"
+      - generic:
+        - generic:
+          - generic: ALT
+        - generic:
+          - generic: SPD
+      - generic:
+        - generic:
+          - generic: STATUS MONITOR
+        - generic:
+          - generic:
+            - generic: BIO-SIGNAL DETECTED
+            - generic:
+              - img
+        - generic:
+          - generic: ID-1A1A1A
+        - generic:
+          - generic: 02:00:15
+      - generic [ref=e7]:
+        - heading "Y O U R _ S I T E" [level=1] [ref=e10]:
+          - generic [ref=e12]: "Y"
+          - generic [ref=e14]: O
+          - generic [ref=e16]: U
+          - generic [ref=e18]: R
+          - generic [ref=e20]: _
+          - generic [ref=e22]: S
+          - generic [ref=e24]: I
+          - generic [ref=e26]: T
+          - generic [ref=e28]: E
+        - generic [ref=e31]: SYSTEM LOG
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e36]: "> SYSTEM INITIALIZING... ["
+          - generic [ref=e37]: ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          - generic [ref=e38]: "] 0%"
+        - generic [ref=e39]:
+          - generic [ref=e40]: "> SYSTEM INITIALIZING... ["
+          - generic [ref=e41]: ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          - generic [ref=e42]: "] 0%"
+    - main [ref=e43]:
+      - generic:
+        - 'button "Portfolio: Project archive" [disabled]':
+          - generic:
+            - generic:
+              - generic: P
+            - generic:
+              - generic: O
+            - generic:
+              - generic: R
+            - generic:
+              - generic: T
+            - generic:
+              - generic: F
+            - generic:
+              - generic: O
+            - generic:
+              - generic: L
+            - generic:
+              - generic: I
+            - generic:
+              - generic: O
+          - generic:
+            - generic: SEC-001
+            - generic: Project archive
+            - generic: THINGS THAT SURVIVED
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: "TASK-001: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-002: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-003: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-004: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-005: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-006: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-007: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-008: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-009: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-010: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-011: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-012: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-013: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-014: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-015: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-016: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-017: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-018: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-019: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-020: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-021: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-022: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-023: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-024: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-025: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-026: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-027: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-028: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-029: Done"
+              - generic:
+                - generic:
+                  - generic: "TASK-030: Done"
+          - generic:
+            - generic: SEC-001 // PROJECT ARCHIVE
+        - 'button "Experience: Timeline record" [disabled]':
+          - generic:
+            - generic:
+              - generic: E
+            - generic:
+              - generic: X
+            - generic:
+              - generic: P
+            - generic:
+              - generic: E
+            - generic:
+              - generic: R
+            - generic:
+              - generic: I
+            - generic:
+              - generic: E
+            - generic:
+              - generic: "N"
+            - generic:
+              - generic: C
+            - generic:
+              - generic: E
+          - generic:
+            - generic: SEC-002
+            - generic: Timeline record
+            - generic: OLD ROADS STILL SIGNAL
+          - generic:
+            - generic: SEC-002 // TIMELINE RECORD
+        - 'button "Blog: Signal log" [disabled]':
+          - generic:
+            - generic:
+              - generic: B
+            - generic:
+              - generic: L
+            - generic:
+              - generic: O
+            - generic:
+              - generic: G
+          - generic:
+            - generic: SEC-003
+            - generic: Signal log
+            - generic: FIELD NOTES FROM THE DUST
+          - generic:
+            - generic: SEC-003 // SIGNAL LOG
+        - 'button "Life: Life fragments" [disabled]':
+          - generic:
+            - generic:
+              - generic: L
+            - generic:
+              - generic: I
+            - generic:
+              - generic: F
+            - generic:
+              - generic: E
+          - generic:
+            - generic: SEC-004
+            - generic: Life fragments
+            - generic: SOFT DATA STILL BREATHES
+          - generic:
+            - generic: SEC-004 // LIFE FRAGMENTS
+        - 'button "Contact: Contact channel" [disabled]':
+          - generic:
+            - generic:
+              - generic: C
+            - generic:
+              - generic: O
+            - generic:
+              - generic: "N"
+            - generic:
+              - generic: T
+            - generic:
+              - generic: A
+            - generic:
+              - generic: C
+            - generic:
+              - generic: T
+          - generic:
+            - generic: SEC-005
+            - generic: Contact channel
+            - generic: PING RETURNED FROM OUTPOST
+          - generic:
+            - generic: SEC-005 // CONTACT CHANNEL
+        - 'button "About: System profile" [disabled]':
+          - generic:
+            - generic:
+              - generic: A
+            - generic:
+              - generic: B
+            - generic:
+              - generic: O
+            - generic:
+              - generic: U
+            - generic:
+              - generic: T
+          - generic:
+            - generic: SEC-006
+            - generic: System profile
+            - generic: IDENTITY TRACE NOT EMPTY
+          - generic:
+            - generic: DATA-Ø05
+          - generic:
+            - generic: DATA-Ø??
+          - generic:
+            - generic: DATA-Ø??
+          - generic:
+            - generic: DATA-Ø??
+          - generic:
+            - generic: DATA-Ø??
+          - generic:
+            - generic: DATA-Ø??
+  - alert [ref=e44]

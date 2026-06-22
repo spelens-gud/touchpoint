@@ -1,0 +1,342 @@
+/* components/interactive/Lightbox.module.scss */
+
+.lightboxOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  cursor: none;
+  opacity: 0;
+  pointer-events: all !important;
+}
+
+.lightboxOverlay.visible {
+  opacity: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+.lightboxOverlay.fadeOut {
+  animation: fadeOut 0.45s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.lightboxContainer {
+  position: relative;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  pointer-events: all !important;
+}
+
+.lightboxFrame {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lightboxImage {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(90vw - 40px);
+  max-height: calc(90vh - 80px);
+  border: 2px solid var(--ark-border);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+}
+
+.archiveScanline {
+  position: absolute;
+  inset: 2px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(var(--ark-primary-rgb, 178, 242, 187), 0.08) 48%,
+      rgba(var(--ark-primary-rgb, 178, 242, 187), 0.45) 50%,
+      rgba(var(--ark-primary-rgb, 178, 242, 187), 0.08) 52%,
+      transparent 100%
+    );
+  mix-blend-mode: screen;
+  opacity: 0.65;
+  transform: translateY(-110%);
+  animation: archiveScan 2.8s ease-in-out infinite;
+}
+
+.archiveHud {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 10px;
+  border: 1px solid rgba(var(--ark-primary-rgb, 178, 242, 187), 0.45);
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--ark-primary);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(var(--ark-primary-rgb, 178, 242, 187), 0.25);
+  pointer-events: none;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span:last-child {
+    flex-shrink: 0;
+    border: 1px solid rgba(var(--ark-primary-rgb, 178, 242, 187), 0.55);
+    padding: 3px 6px;
+    background: rgba(var(--ark-primary-rgb, 178, 242, 187), 0.1);
+  }
+}
+
+@keyframes archiveScan {
+  0% { transform: translateY(-110%); opacity: 0; }
+  18% { opacity: 0.65; }
+  72% { opacity: 0.65; }
+  100% { transform: translateY(110%); opacity: 0; }
+}
+
+.lightboxCaption {
+  color: #ccc;
+  font-family: var(--font-hud);
+  font-size: var(--fs-body);
+  margin-top: 10px;
+  text-align: center;
+  max-width: 80%;
+}
+
+.lightboxButton {
+  position: fixed;
+  top: 50%;
+  width: 80px;
+  height: 20px;
+  background: rgba(var(--ark-secondary-rgb), 0.15);
+  border: 1px solid var(--ark-border);
+  color: var(--ark-text-secondary);
+  font-family: 'Dosis', monospace;
+  font-size: 0;
+  padding: 0;
+  cursor: none;
+  z-index: 999999;
+  pointer-events: all !important;
+  transition: opacity 0.3s ease-out, background-color 0.3s, color 0.3s, border-color 0.3s;
+  opacity: 0.7;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+    line-height: 1;
+    color: inherit;
+    transition: color 0.3s;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--ark-primary);
+    border-color: var(--ark-primary);
+    opacity: 1;
+    outline: none;
+
+    &::before {
+      color: var(--ark-dark-blue);
+    }
+  }
+
+  :global(.inverted) & {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: var(--ark-border);
+    color: var(--ark-text-secondary);
+
+    &::before {
+      color: var(--ark-text-secondary);
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: var(--ark-primary);
+      border-color: var(--ark-primary);
+
+      &::before {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.closeButton {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  z-index: 999999;
+  border: 1px solid var(--ark-border);
+  background: rgba(var(--ark-secondary-rgb, 30, 40, 55), 0.2);
+  color: var(--ark-text-secondary);
+  cursor: none;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: center;
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--ark-primary);
+    border-color: var(--ark-primary);
+    color: var(--ark-dark-blue);
+    outline: none;
+  }
+}
+
+.prevButton {
+  left: 30px;
+  transform: translateY(-50%);
+
+  &::before {
+    content: '←';
+  }
+}
+
+.nextButton {
+  right: 30px;
+  transform: translateY(-50%);
+
+  &::before {
+    content: '→';
+  }
+}
+
+@media (max-width: 768px) {
+  .prevButton {
+    left: 8px;
+    width: 44px;
+    min-height: 20px;
+  }
+
+  .nextButton {
+    right: 8px;
+    width: 44px;
+    min-height: 20px;
+  }
+
+  .lightboxCaption {
+    font-size: var(--fs-base);
+  }
+
+  .lightboxImage {
+    max-width: calc(95vw - 20px);
+    max-height: calc(95vh - 60px);
+  }
+
+  .lightboxOverlay {
+    touch-action: none;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+    cursor: auto;
+  }
+
+  .archiveHud {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+.dotsContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 2px;
+  border-radius: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.dot.activeDot {
+  width: 36px;
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightboxOverlay.visible,
+  .lightboxOverlay.fadeOut,
+  .archiveScanline {
+    animation: none;
+  }
+
+  .archiveScanline {
+    opacity: 0.16;
+    transform: none;
+  }
+
+  .dot,
+  .lightboxButton {
+    transition: none;
+  }
+}

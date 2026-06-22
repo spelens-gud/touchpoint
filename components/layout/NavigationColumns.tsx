@@ -1,0 +1,332 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import styles from '../../styles/Home.module.scss';
+import VerticalShinyText from '../shared/VerticalShinyText';
+import ActivationLever from '../interactive/ActivationLever';
+import { useApp } from '../../contexts/AppContext';
+import { primaryNavItems } from '../../data/navigation';
+
+const EASTER_REVEAL_WINDOW_MS = 3200;
+const EASTER_REVEAL_DURATION_MS = 2600;
+
+export default function NavigationColumns({
+  activeSection,
+  linesAnimated,
+  pulsingNormalIndices,
+  pulsingReverseIndices,
+  textVisible,
+  animationsComplete,
+  isInverted,
+  columnPhase,
+  randomHudTexts,
+  branchText1,
+  branchText2,
+  branchText3,
+  branchText4,
+  handleColumnClick,
+  handleColumnMouseEnter,
+  handleColumnMouseLeave,
+}) {
+  const {
+    handleActivateTesseract, isTesseractActivated,
+    handleDischargeLeverPull, isDischarging,
+    leversVisible, mainVisible, powerLevel,
+    displayedFateText, isFateTypingActive,
+  } = useApp();
+
+  const rightPanelRef = useRef<HTMLDivElement>(null);
+  const lastColumnEnterRef = useRef<{ index: number; enteredAt: number } | null>(null);
+  const easterRevealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [revealedEasterIndex, setRevealedEasterIndex] = useState<number | null>(null);
+
+  const clearEasterRevealTimer = useCallback(() => {
+    if (!easterRevealTimerRef.current) return;
+    clearTimeout(easterRevealTimerRef.current);
+    easterRevealTimerRef.current = null;
+  }, []);
+
+  const revealEasterHint = useCallback((index: number) => {
+    clearEasterRevealTimer();
+    setRevealedEasterIndex(index);
+    easterRevealTimerRef.current = setTimeout(() => {
+      setRevealedEasterIndex(currentIndex => (
+        currentIndex === index ? null : currentIndex
+      ));
+      easterRevealTimerRef.current = null;
+    }, EASTER_REVEAL_DURATION_MS);
+  }, [clearEasterRevealTimer]);
+
+  const handleColumnEnter = useCallback((index: number) => {
+    if (!animationsComplete) return;
+
+    const now = performance.now();
+    const lastEnter = lastColumnEnterRef.current;
+    const isSecondEnter =
+      lastEnter?.index === index &&
+      now - lastEnter.enteredAt <= EASTER_REVEAL_WINDOW_MS;
+
+    if (isSecondEnter) {
+      revealEasterHint(index);
+    } else {
+      setRevealedEasterIndex(null);
+    }
+
+    lastColumnEnterRef.current = { index, enteredAt: now };
+    handleColumnMouseEnter(index);
+  }, [animationsComplete, handleColumnMouseEnter, revealEasterHint]);
+
+  const handleColumnExit = useCallback((index: number) => {
+    if (!animationsComplete) return;
+
+    setRevealedEasterIndex(currentIndex => (
+      currentIndex === index ? null : currentIndex
+    ));
+    handleColumnMouseLeave(index);
+  }, [animationsComplete, handleColumnMouseLeave]);
+
+  useEffect(() => {
+    if (!mainVisible) return;
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    if (!isMobile || !rightPanelRef.current) return;
+
+    const panel = rightPanelRef.current;
+    const mobilePanel = panel.querySelector(`.${styles.mobilePanel}`);
+    const columns = panel.querySelectorAll(`.${styles.column}`);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      if (mobilePanel) gsap.set(mobilePanel, { opacity: 1, y: 0 });
+      columns.forEach(col => gsap.set(col, { opacity: 1, x: 0, scale: 1 }));
+
+      return () => {
+        if (mobilePanel) gsap.set(mobilePanel, { clearProps: 'all' });
+        columns.forEach(col => gsap.set(col, { clearProps: 'all' }));
+      };
+    }
+
+    const tl = gsap.timeline();
+
+    if (mobilePanel) {
+      gsap.set(mobilePanel, { opacity: 0, y: -12 });
+      tl.to(mobilePanel, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0);
+    }
+
+    columns.forEach((col, i) => {
+      gsap.set(col, { opacity: 0, x: 30, scale: 0.97 });
+      tl.to(col, {
+        opacity: 1, x: 0, scale: 1,
+        duration: 0.35, ease: 'power2.out',
+      }, 0.2 + i * 0.09);
+    });
+
+    return () => {
+      tl.kill();
+      if (mobilePanel) gsap.set(mobilePanel, { clearProps: 'all' });
+      columns.forEach(col => gsap.set(col, { clearProps: 'all' }));
+    };
+  }, [mainVisible]);
+
+  useEffect(() => () => {
+    clearEasterRevealTimer();
+  }, [clearEasterRevealTimer]);
+
+  return (
+    <main
+      className={styles.mainLayout}
+      style={{ opacity: 1, pointerEvents: 'auto' }}
+    >
+      {/* 导航列（桌面端垂直列 / 平板移动端横向条） */}
+      <div className={`${styles.rightPanel}${columnPhase === 'retracting' ? ` ${styles.columnsRetracting}` : ''}`} ref={rightPanelRef}>
+        {/* 移动端面板 — 桌面端 LeftPanel 完整移植 */}
+        <div className={styles.mobilePanel}>
+          {/* 顶部行: 电量 + 拉杆 */}
+          <div className={styles.mobilePanelTopRow}>
+            <div className={styles.mobilePanelPower}>
+              <div className={styles.batteryIcon}>
+                {[...Array(5)].map((_, i) => {
+                  const shouldBeFilled = powerLevel >= (i + 1) * 20;
+                  const isFilled = (i === 4 && powerLevel === 100) || shouldBeFilled;
+                  return (
+                    <span
+                      key={i}
+                      className={`${styles.batteryLevelSegment} ${isFilled ? styles.filled : ''}`}
+                    />
+                  );
+                })}
+              </div>
+              <span className={styles.powerText}>{powerLevel}%</span>
+            </div>
+            <div className={styles.mobilePanelLevers}>
+              {mainVisible && (
+                <>
+                  <ActivationLever
+                    onActivate={handleActivateTesseract}
+                    isActive={isTesseractActivated}
+                    iconType="discharge"
+                    isAnimated={leversVisible}
+                    label="Deploy tesseract charging field"
+                  />
+                  <ActivationLever
+                    onActivate={handleDischargeLeverPull}
+                    isActive={isDischarging}
+                    iconType="drain"
+                    isAnimated={leversVisible}
+                    label="Discharge core"
+                    lockedReason={powerLevel < 100 ? `Requires 100 percent charge. Current charge ${powerLevel} percent.` : undefined}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* RM Logo — 弹性填充中央区域 */}
+          <div className={styles.mobilePanelLogo} />
+
+          {/* 底部行: 盲文(左) + 命运文字(右) */}
+          <div className={styles.mobilePanelBottomRow}>
+            <div className={styles.mobilePanelBraille}>⠝⠊⠕⠍⠡⠸⠬⠉⠄⠅⠢⠛⠳</div>
+            <div className={`${styles.mobilePanelFate} ${isFateTypingActive ? styles.mobilePanelTyping : ''}`}>
+              <span className={styles.mobilePanelFateText}>{displayedFateText}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Vertical lines */}
+        {[...Array(7)].map((_, index) => {
+          const lineLeftPercentage = index * 16;
+          const isPulsingNormal = pulsingNormalIndices?.includes(index);
+          const isPulsingReverse = pulsingReverseIndices?.includes(index);
+          return (
+            <div
+              key={`line-${index}`}
+              className={`
+                ${styles.verticalLine} 
+                ${linesAnimated ? styles.animated : ''} 
+                ${isPulsingNormal ? styles.pulsing : ''} 
+                ${isPulsingReverse ? styles.pulsingReverse : ''}
+              `}
+              style={{ left: `${lineLeftPercentage}%` }}
+            ></div>
+          );
+        })}
+
+        {/* Navigation columns */}
+        {primaryNavItems.map((item, index) => {
+          const hudText = `${item.code} // ${item.shortHint.toUpperCase()}`;
+          const isEasterHintVisible = revealedEasterIndex === index;
+
+          const tasks = Array.from({ length: 30 }, (_, i) => {
+            const taskNumber = String(i + 1).padStart(3, '0');
+            return `TASK-${taskNumber}: Done`;
+          });
+
+          return (
+            <button
+              type="button"
+              key={item.hash}
+              className={`${styles.column} ${styles['column' + index]} ${!animationsComplete ? styles.nonInteractive : ''}`}
+              onClick={animationsComplete ? () => handleColumnClick(index) : undefined}
+              onMouseEnter={() => handleColumnEnter(index)}
+              onMouseLeave={() => handleColumnExit(index)}
+              onFocus={() => handleColumnEnter(index)}
+              onBlur={() => handleColumnExit(index)}
+              disabled={!animationsComplete}
+              aria-label={`${item.label}: ${item.shortHint}`}
+              data-cursor-label={item.cursorLabel}
+            >
+              <div className={styles.verticalText}>
+                {item.displayLabel.split('').map((char, charIdx) => {
+                  const delay = `${charIdx * 0.005}s`;
+                  return (
+                    <div key={charIdx} className={styles.charItem}>
+                      <VerticalShinyText
+                        text={char}
+                        textVisible={textVisible}
+                        animationDelay={delay}
+                        speed={0.8}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={styles.columnAffordance} aria-hidden="true">
+                <span className={styles.columnAffordanceCode}>{item.code}</span>
+                <span className={styles.columnAffordanceHint}>{item.shortHint}</span>
+                <span
+                  className={`${styles.columnEasterHint} ${isEasterHintVisible ? styles.columnEasterHintVisible : ''}`}
+                >
+                  {item.easterHint}
+                </span>
+              </div>
+              <div className={styles.hudOverlay}>
+                {index === 0 && (
+                  <div className={styles.taskContainer}>
+                    {tasks.flatMap((task, taskIdx) => [
+                      <div key={`task-${taskIdx}`} className={styles.taskItem}>
+                        <span className={styles.taskSquare}></span>
+                        <div className={styles.taskTextWrapper}>
+                          <span className={styles.taskText}>{task}</span>
+                        </div>
+                      </div>,
+                      taskIdx < tasks.length - 1 && <div key={`line-${taskIdx}`} className={styles.taskLine}></div>
+                    ])}
+                  </div>
+                )}
+                {index === 1 && (
+                  <>
+                    <div className={`${styles.branchContainer} ${styles.branch1} ${styles.rightBranch}`}>
+                      <span className={styles.branchSquare}></span>
+                      <pre className={styles.branchText}>{branchText1}</pre>
+                    </div>
+                    <div className={`${styles.branchContainer} ${styles.branch2} ${styles.leftBranch}`}>
+                      <span className={styles.branchSquare}></span>
+                      <pre className={styles.branchText}>{branchText2}</pre>
+                    </div>
+                    <div className={`${styles.branchContainer} ${styles.branch3} ${styles.rightBranch}`}>
+                      <span className={styles.branchSquare}></span>
+                      <pre className={styles.branchText}>{branchText3}</pre>
+                    </div>
+                    <div className={`${styles.branchContainer} ${styles.branch4} ${styles.leftBranch}`}>
+                      <span className={styles.branchSquare}></span>
+                      <pre className={styles.branchText}>{branchText4}</pre>
+                    </div>
+                  </>
+                )}
+                {index === 3 && <span className={`${styles.lifeScanlines} ${isInverted ? styles.invertedScanlines : ''}`}></span>}
+                {index === 4 && (
+                  <>
+                    <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
+                    <div className={`${styles.radarRipple} ${styles.ripple2}`}></div>
+                    <div className={`${styles.radarRipple} ${styles.ripple3}`}></div>
+                  </>
+                )}
+              </div>
+              <div className={styles.cornerHudTopLeft}></div>
+              <div className={styles.cornerHudBottomRight}></div>
+              <div className={styles.imageHud}>
+                <span className={styles.imageHudSquare}></span>
+                <span className={styles.imageHudText}>
+                  {index === 5 ? randomHudTexts[0] : hudText}
+                </span>
+              </div>
+              {index === 5 && (
+                <>
+                  {randomHudTexts.slice(1).map((text, randomIdx) => (
+                    <div
+                      key={`random-hud-${randomIdx}`}
+                      className={`${styles.imageHud} ${styles.randomHud} ${styles[`randomHud${randomIdx + 1}`]}`}
+                    >
+                      <span className={styles.imageHudSquare}></span>
+                      <span className={styles.imageHudText}>{text}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </button>
+          );
+        })}
+
+      </div>
+    </main>
+  );
+}

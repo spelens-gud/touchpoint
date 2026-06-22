@@ -1,0 +1,287 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e24]:
+      - generic "播放" [ref=e37]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e42]: Your Song Title - Artist Name
+          - button "展开列表" [ref=e43]
+        - generic [ref=e47]:
+          - generic [ref=e48]: SIGNAL STABLE
+          - generic [ref=e49]: 60%
+      - generic [ref=e53]:
+        - generic [ref=e54]: Your Song Title
+        - generic [ref=e55]: Artist Name
+    - generic:
+      - generic:
+        - generic: PORTFOLIO
+    - generic:
+      - generic: "TIME: 02:04:46"
+      - generic: SYSTEM_ONLINE
+    - generic:
+      - generic: "CURSOR_X: 0785"
+      - generic: "CURSOR_Y: 0360"
+    - generic:
+      - generic: YOUR_SITE
+      - generic: NAV_SYSTEM_v2.4
+    - generic:
+      - generic: TACTICAL_MODE
+      - generic: SECURE_CONNECTION
+    - generic:
+      - generic [ref=e56]:
+        - button "Deploy tesseract charging field" [ref=e57]:
+          - img [ref=e58]
+        - button "Discharge core. Requires 100 percent charge. Current charge 60 percent." [disabled] [ref=e176]:
+          - img [ref=e65]
+          - generic [ref=e73]: Requires 100 percent charge. Current charge 60 percent.
+      - button "Back" [ref=e177] [cursor=pointer]: ←
+      - navigation "Section navigation" [ref=e178]:
+        - button "Portfolio" [ref=e179]
+        - button "Experience" [ref=e180]
+        - button "Blog" [ref=e181]
+        - button "Life" [ref=e182]
+        - button "Contact" [ref=e183]
+        - button "About" [ref=e184]
+        - button "Friends" [ref=e185]
+      - meter "System power" [ref=e75]:
+        - generic [ref=e82]: 60%
+      - 'img "Identity module probe: empty" [ref=e83]':
+        - generic: IDENTITY MODULE EMPTY
+      - generic:
+        - generic: Replace This Wi _
+      - generic:
+        - generic: "TEMP: 55.5°C RAD: 446mSv/h O2: _"
+    - generic [ref=e186]:
+      - generic [ref=e188]:
+        - heading "PORTFOLIO" [level=2] [ref=e189]
+        - generic [ref=e190]:
+          - button "Web" [ref=e191]
+          - button "Game" [ref=e192]
+        - generic [ref=e195]:
+          - button "Open Portfolio Website" [ref=e196]:
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - generic [ref=e201]: "2025"
+                - generic [ref=e202]: Design & Development
+              - heading "[Portfolio Website]" [level=3] [ref=e203]
+              - paragraph [ref=e204]: A HUD-themed personal portfolio built with Next.js
+              - generic [ref=e205]:
+                - generic [ref=e206]: UI/UX
+                - generic [ref=e207]: Full Stack
+                - generic [ref=e208]: DevOps
+            - link "Visit Portfolio Website" [ref=e209]:
+              - /url: https://example.com
+              - text: Visit
+          - button "Open Example Project" [ref=e210]:
+            - generic [ref=e213]:
+              - generic [ref=e214]:
+                - generic [ref=e215]: "2025"
+                - generic [ref=e216]: Frontend Developer
+              - heading "[Example Project]" [level=3] [ref=e217]
+              - paragraph [ref=e218]: A sample project to demonstrate the template structure
+              - generic [ref=e219]:
+                - generic [ref=e220]: React
+                - generic [ref=e221]: TypeScript
+            - link "Visit Example Project" [ref=e222]:
+              - /url: https://example.com
+              - text: Visit
+        - generic [ref=e223]:
+          - button "▸ 早期学习 / Early Works 1" [ref=e224]:
+            - generic [ref=e225]: ▸
+            - generic [ref=e226]: 早期学习 / Early Works
+            - generic [ref=e227]: "1"
+          - button "Open Learning Project" [ref=e229]:
+            - generic [ref=e232]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: "2023"
+                - generic [ref=e235]: Student
+              - heading "[Learning Project]" [level=3] [ref=e236]
+              - paragraph [ref=e237]: A project from your early learning journey
+              - generic [ref=e238]:
+                - generic [ref=e239]: HTML
+                - generic [ref=e240]: CSS
+        - generic [ref=e241]:
+          - button "▸ 技能熟练度 / Skills 9" [ref=e242]:
+            - generic [ref=e243]: ▸
+            - generic [ref=e244]: 技能熟练度 / Skills
+            - generic [ref=e245]: "9"
+          - generic [ref=e247]:
+            - generic [ref=e249]:
+              - generic [ref=e250]:
+                - generic [ref=e251]:
+                  - generic [ref=e252]: FRONTEND
+                  - generic [ref=e253]: ────────────────────────
+                  - generic [ref=e254]: "[3]"
+                - generic [ref=e255]:
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: React / Next.js
+                    - generic [ref=e270]: "7"
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: JavaScript / TypeScript
+                    - generic [ref=e285]: "7"
+                  - generic [ref=e287]:
+                    - generic [ref=e288]: HTML / CSS / SCSS
+                    - generic [ref=e300]: "6"
+              - generic [ref=e301]:
+                - generic [ref=e302]:
+                  - generic [ref=e303]: BACKEND
+                  - generic [ref=e304]: ────────────────────────
+                  - generic [ref=e305]: "[3]"
+                - generic [ref=e306]:
+                  - generic [ref=e308]:
+                    - generic [ref=e309]: Node.js
+                    - generic [ref=e321]: "5"
+                  - generic [ref=e323]:
+                    - generic [ref=e324]: Python
+                    - generic [ref=e336]: "4"
+                  - generic [ref=e338]:
+                    - generic [ref=e339]: Database
+                    - generic [ref=e351]: "4"
+              - generic [ref=e352]:
+                - generic [ref=e353]:
+                  - generic [ref=e354]: GENERAL
+                  - generic [ref=e355]: ────────────────────────
+                  - generic [ref=e356]: "[3]"
+                - generic [ref=e357]:
+                  - generic [ref=e359]:
+                    - generic [ref=e360]: UI/UX Design
+                    - generic [ref=e372]: "6"
+                  - generic [ref=e374]:
+                    - generic [ref=e375]: DevOps
+                    - generic [ref=e387]: "3"
+                  - generic [ref=e389]:
+                    - generic [ref=e390]: Git / GitHub
+                    - generic [ref=e402]: "6"
+            - generic [ref=e405]: HOVER TO INSPECT
+      - generic [ref=e407]:
+        - heading "EXPERIENCE" [level=2] [ref=e408]
+        - generic [ref=e409]:
+          - generic [ref=e413] [cursor=pointer]:
+            - generic [ref=e414]:
+              - generic [ref=e415]: 2016 - 2022
+              - heading "High School" [level=3] [ref=e416]
+            - paragraph [ref=e418]: Your High School Name
+          - generic [ref=e422] [cursor=pointer]:
+            - generic [ref=e423]:
+              - generic [ref=e424]: 2022 - Present
+              - heading "University" [level=3] [ref=e425]
+            - generic [ref=e426]:
+              - paragraph [ref=e427]: Your University Name
+              - paragraph [ref=e428]: Your Major
+          - generic [ref=e432] [cursor=pointer]:
+            - generic [ref=e433]:
+              - generic [ref=e434]: 2024.07 - 08
+              - heading "Internship" [level=3] [ref=e435]
+            - generic [ref=e436]:
+              - paragraph [ref=e437]: Company Name
+              - paragraph [ref=e438]: Department
+              - paragraph [ref=e439]: Your role description
+      - generic [ref=e441]:
+        - heading "Blog" [level=2] [ref=e442]
+        - generic [ref=e443]:
+          - link "Read Getting Started with Your HUD Portfolio" [ref=e444]:
+            - /url: /blog/getting-started
+            - generic [ref=e445]:
+              - generic [ref=e446]: "01"
+              - generic [ref=e447]:
+                - generic [ref=e448]:
+                  - heading "Getting Started with Your HUD Portfolio" [level=4] [ref=e449]
+                  - generic [ref=e450]: 2025-01-15
+                - paragraph [ref=e451]: A guide to customizing this template and making it your own.
+                - generic [ref=e452]:
+                  - generic [ref=e453]:
+                    - generic [ref=e454]: "#guide"
+                    - generic [ref=e455]: "#template"
+                    - generic [ref=e456]: "#getting-started"
+                  - generic [ref=e457]: 1 min read
+              - generic [ref=e458]: →
+          - link "Read Hello World" [ref=e459]:
+            - /url: /blog/hello-world
+            - generic [ref=e460]:
+              - generic [ref=e461]: "02"
+              - generic [ref=e462]:
+                - generic [ref=e463]:
+                  - heading "Hello World" [level=4] [ref=e464]
+                  - generic [ref=e465]: 2025-01-01
+                - paragraph [ref=e466]: The first post on my new portfolio blog.
+                - generic [ref=e467]:
+                  - generic [ref=e468]:
+                    - generic [ref=e469]: "#personal"
+                    - generic [ref=e470]: "#introduction"
+                  - generic [ref=e471]: 1 min read
+              - generic [ref=e472]: →
+      - generic [ref=e474]:
+        - heading "LIFE" [level=2] [ref=e475]
+        - generic [ref=e476]:
+          - button "Game" [ref=e477]
+          - button "Travel" [ref=e478]
+          - button "Art" [ref=e479]
+          - button "Other" [ref=e480]
+        - generic [ref=e481]:
+          - generic [ref=e482]:
+            - button "Open Your Favorite Game" [ref=e484]:
+              - generic [ref=e487]:
+                - heading "[Your Favorite Game]" [level=3] [ref=e488]
+                - paragraph [ref=e489]: A short tagline about why this game matters to you.
+                - generic [ref=e490]:
+                  - generic [ref=e491]: Genre
+                  - generic [ref=e492]: Platform
+            - generic [ref=e493]:
+              - button "▸ 还有这些也玩 / Also Play These 8" [ref=e494]:
+                - generic [ref=e495]: ▸
+                - generic [ref=e496]: 还有这些也玩 / Also Play These
+                - generic [ref=e497]: "8"
+              - generic [ref=e498]:
+                - generic [ref=e499]: "The Binding of Isaac: Rebirth"
+                - generic [ref=e500]: Terraria
+                - generic [ref=e501]: Stardew Valley
+                - generic [ref=e502]: Warframe
+                - generic [ref=e503]: Deep Rock Galactic
+                - generic [ref=e504]: Slay the Spire
+                - generic [ref=e505]: Stellaris
+                - generic [ref=e506]: RimWorld
+          - generic:
+            - generic:
+              - button "Open A City You Love":
+                - generic:
+                  - heading "[A City You Love]" [level=3]
+                  - paragraph: Where you found something unexpected.
+                  - generic:
+                    - generic: Travel
+          - generic:
+            - generic:
+              - paragraph: 艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...
+          - generic:
+            - generic:
+              - button "Open A Hobby":
+                - generic:
+                  - heading "[A Hobby]" [level=3]
+                  - paragraph: Something you do outside of coding.
+      - generic [ref=e508]:
+        - heading "CONTACT" [level=2] [ref=e509]
+        - button "Copy email address" [ref=e512]:
+          - img [ref=e514]
+          - generic: your-email@example.com
+        - link "Open GitHub profile" [ref=e517]:
+          - /url: https://github.com/your-username
+          - img [ref=e519]
+        - link "Open social channel" [ref=e522]:
+          - /url: https://twitter.com/your-handle
+          - img [ref=e524]
+        - link "Open LinkedIn profile" [ref=e529]:
+          - /url: https://linkedin.com/in/your-profile
+          - img [ref=e531]
+        - link "Open RSS feed" [ref=e534]:
+          - /url: /rss.xml
+          - img [ref=e536]
+        - button "Open friend links" [ref=e539]:
+          - img [ref=e541]
+          - generic: Links
+      - generic [ref=e548]:
+        - heading "ABOUT" [level=2] [ref=e549]
+        - generic [ref=e550]:
+          - paragraph [ref=e551]: "System Uptime: 000:06:11:56"
+          - paragraph [ref=e552]: "Total Visits: 52"
+          - paragraph [ref=e553]: "Online Now: 4"
+        - generic [ref=e554]: MIT 2025-PRESENT © Your Name
+  - alert [ref=e23]: My Portfolio

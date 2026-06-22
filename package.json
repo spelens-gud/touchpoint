@@ -1,0 +1,45 @@
+{
+  "name": "portfolio-site",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "lint": "next lint"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "MIT",
+  "description": "A post-apocalyptic HUD-themed portfolio & blog template built with Next.js 14",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@react-three/cannon": "^6.6.0",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.15.11",
+    "cannon-es": "^0.20.0",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.5.0",
+    "gray-matter": "^4.0.3",
+    "gsap": "^3.13.0",
+    "next": "^14.1.4",
+    "next-mdx-remote": "^6.0.0",
+    "react": "^18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.2.0",
+    "reading-time": "^1.5.0",
+    "sass": "^1.72.0",
+    "three": "^0.176.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^14.2.35",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.175.0",
+    "cross-env": "^10.1.0",
+    "typescript": "^5.9.3"
+  }
+}

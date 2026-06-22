@@ -1,0 +1,219 @@
+import { useState, useRef, useCallback, useEffect } from 'react';
+
+export interface LoadingLogLine {
+  id: number;
+  text: string;
+}
+
+const LOG_ENTRIES = [
+  { threshold: 5, text: "INITIALIZING SYSTEM..." },
+  { threshold: 11, text: "DETECTING HARDWARE_" },
+  { threshold: 17, text: "SYSTEM ID [INS-001]" },
+  { threshold: 23, text: "SCANNING ENVIRONMENT..." },
+  { threshold: 29, text: "ANOMALY DETECTED [ATM-247]" },
+  { threshold: 35, text: "ESTABLISHING SIGNAL..." },
+  { threshold: 41, text: "CONNECTING TERMINAL [DAT-189]" },
+  { threshold: 47, text: "DATABASE ONLINE..." },
+  { threshold: 53, text: "LOADING MAP DATA [MAP-379]" },
+  { threshold: 59, text: "INDEXING RECORDS..." },
+  { threshold: 65, text: "CALCULATING INDEX [SRV-682]" },
+  { threshold: 71, text: "LOADING ATMOSPHERIC MODEL..." },
+  { threshold: 77, text: "CALIBRATING SYSTEMS..." },
+  { threshold: 83, text: "VERIFYING INTEGRITY..." },
+  { threshold: 89, text: "CONNECTING TO MAIN [SYS-000]" },
+  { threshold: 93, text: "SYSTEM READY." },
+  { threshold: 97, text: "WELCOME BACK." },
+];
+
+const MIN_DISPLAY_TIME = 1800;
+const FAST_MIN_DISPLAY_TIME = 420;
+
+const createLogLine = (text: string): LoadingLogLine => ({
+  id: Date.now() + Math.random(),
+  text,
+});
+
+interface LoadingSystemOptions {
+  fastBoot?: boolean;
+}
+
+export const useLoadingSystem = (
+  startLogging: boolean = true,
+  options: LoadingSystemOptions = {},
+) => {
+  const { fastBoot = false } = options;
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [logLines, setLogLines] = useState<LoadingLogLine[]>([]);
+  const [showSplitLines, setShowSplitLines] = useState(false);
+
+  // Progress tracking refs (no re-render needed)
+  const startTimeRef = useRef(Date.now());
+  const processedLogTextsRef = useRef(new Set<string>());
+  const welcomeMessageCountsRef = useRef<Record<string, number>>({});
+  const logQueueRef = useRef<LoadingLogLine[]>([]);
+  const consumerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const drainPollIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const completedRef = useRef(false);
+
+  const clearTimers = useCallback(() => {
+    if (progressIntervalRef.current !== null) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+    if (drainPollIdRef.current !== null) {
+      clearTimeout(drainPollIdRef.current);
+      drainPollIdRef.current = null;
+    }
+  }, []);
+
+  const completeBoot = useCallback((lineText?: string) => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    clearTimers();
+    logQueueRef.current = [];
+    if (consumerIntervalRef.current !== null) {
+      clearInterval(consumerIntervalRef.current);
+      consumerIntervalRef.current = null;
+    }
+    setProgress(100);
+    setLogLines(prev => {
+      const next = lineText
+        ? [...prev, createLogLine(lineText)]
+        : prev;
+      return next.length > 0
+        ? next
+        : [createLogLine(fastBoot ? 'FAST BOOT ACCEPTED.' : 'BOOT SEQUENCE COMPLETE.')];
+    });
+    setShowSplitLines(true);
+  }, [clearTimers, fastBoot]);
+
+  const appendLogLine = useCallback((text: string) => {
+    setLogLines(prev => [...prev, createLogLine(text)]);
+  }, []);
+
+  // ===================== Log queue consumer =====================
+  const startLogConsumer = useCallback(() => {
+    if (consumerIntervalRef.current !== null) return;
+    consumerIntervalRef.current = setInterval(() => {
+      if (logQueueRef.current.length === 0) {
+        clearInterval(consumerIntervalRef.current!);
+        consumerIntervalRef.current = null;
+        return;
+      }
+      const line = logQueueRef.current.shift()!;
+      setLogLines(prev => [...prev, line]);
+    }, 70);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearTimers();
+      if (consumerIntervalRef.current !== null) {
+        clearInterval(consumerIntervalRef.current);
+      }
+    };
+  }, [clearTimers]);
+
+  // ===================== Progress simulation =====================
+  const generateLogLine = useCallback((prog: number) => {
+    const newLines: LoadingLogLine[] = [];
+
+    for (const log of LOG_ENTRIES) {
+      const isWelcome = log.threshold === 93 || log.threshold === 97;
+      const count = welcomeMessageCountsRef.current[log.text] || 0;
+      const canProcess = isWelcome ? count < 2 : !processedLogTextsRef.current.has(log.text);
+
+      if (prog >= log.threshold && canProcess) {
+        if (isWelcome) {
+          newLines.push(createLogLine(log.text));
+          welcomeMessageCountsRef.current[log.text] = count + 1;
+        } else {
+          processedLogTextsRef.current.add(log.text);
+          const numLines = Math.random() < 0.2
+            ? Math.floor(Math.random() * 6) + 3
+            : Math.floor(Math.random() * 3) + 2;
+          let lastPct = 0;
+          for (let i = 1; i <= numLines; i++) {
+            let pct: number;
+            if (i === numLines) {
+              pct = 100;
+            } else {
+              const minPct = lastPct + 5;
+              const maxPct = Math.max(minPct + 5, 100 - (numLines - i) * 5);
+              pct = Math.min(99, Math.floor(Math.random() * (maxPct - minPct + 1)) + minPct);
+            }
+            newLines.push(createLogLine(`${log.text} ${pct}%`));
+            lastPct = pct;
+          }
+        }
+      }
+    }
+
+    if (newLines.length > 0) {
+      logQueueRef.current.push(...newLines);
+      startLogConsumer();
+    }
+  }, [startLogConsumer]);
+
+  useEffect(() => {
+    if (!startLogging) return;
+    if (completedRef.current) return;
+    
+    startTimeRef.current = Date.now();
+    completedRef.current = false;
+    const tickMs = fastBoot ? 35 : 80;
+    const minDisplayTime = fastBoot ? FAST_MIN_DISPLAY_TIME : MIN_DISPLAY_TIME;
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const delta = fastBoot
+          ? Math.random() * 22 + 16
+          : Math.random() * 3.0 + 0.5;
+        const next = Math.min(prev + delta, 100);
+        generateLogLine(next);
+        if (next >= 100) {
+          clearInterval(interval);
+          progressIntervalRef.current = null;
+          const remaining = Math.max(0, minDisplayTime - (Date.now() - startTimeRef.current));
+          const waitForQueueDrain = () => {
+            if (logQueueRef.current.length === 0 && consumerIntervalRef.current === null) {
+              completeBoot(fastBoot ? 'FAST BOOT CHANNEL READY.' : undefined);
+            } else {
+              drainPollIdRef.current = setTimeout(waitForQueueDrain, fastBoot ? 30 : 80);
+            }
+          };
+          drainPollIdRef.current = setTimeout(waitForQueueDrain, remaining);
+          return 100;
+        }
+        return next;
+      });
+    }, tickMs);
+    progressIntervalRef.current = interval;
+    return () => {
+      clearInterval(interval);
+      if (progressIntervalRef.current === interval) {
+        progressIntervalRef.current = null;
+      }
+      clearTimers();
+    };
+  }, [clearTimers, completeBoot, fastBoot, generateLogLine, startLogging]);
+
+  // ===================== Split lines trigger → exit =====================
+  useEffect(() => {
+    if (!showSplitLines) return;
+    const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const delay = reducedMotion ? 100 : 600;
+    const id = setTimeout(() => setLoading(false), delay);
+    return () => clearTimeout(id);
+  }, [showSplitLines]);
+
+  return {
+    progress,
+    logLines,
+    showSplitLines,
+    loading,
+    appendLogLine,
+    skipBoot: () => completeBoot('BOOT SEQUENCE BYPASSED.'),
+  };
+};

@@ -1,0 +1,10 @@
+[      64ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/umami/script.js:0
+[     524ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:29889
+[     586ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/images/texture-noise.png:0
+[     590ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/.pnpm/next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.101.0/node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[    9706ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/music/example.mp3:0
+[  181752ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/.pnpm/next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.101.0/node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  182551ms] [LOG] [Fast Refresh] done in 799ms @ webpack-internal:///./node_modules/.pnpm/next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.101.0/node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:190
+[  182594ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/.pnpm/next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.101.0/node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  182766ms] [LOG] Refreshing page data due to server-side change @ webpack-internal:///./node_modules/.pnpm/next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.101.0/node_modules/next/dist/client/page-bootstrap.js:100
+[  182824ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/music/example.mp3:0
