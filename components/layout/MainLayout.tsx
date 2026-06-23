@@ -10,6 +10,7 @@ import { useResponsive } from '../../hooks/useMediaQuery';
 import CustomCursor from '../interactive/CustomCursor';
 import HomeLoadingScreen from '../shared/HomeLoadingScreen';
 import MusicPlayer from '../interactive/MusicPlayer';
+import CommandTerminal from '../interactive/CommandTerminal';
 import GlobalHud from './GlobalHud';
 import LeftPanel from './LeftPanel';
 import { primaryNavItems } from '../../data/navigation';
@@ -43,6 +44,7 @@ export default function MainLayout({ children }) {
     powerLevel, isFateTypingActive, displayedFateText,
     isEnvParamsTyping, displayedEnvParams, envData, envDataVersion,
     deactivateTesseract, systemNotice, pushSystemNotice, currentVisitors,
+    archiveLayerActive, openCommandTerminal,
   } = app;
 
   const isHome = router.pathname === '/';
@@ -252,6 +254,22 @@ export default function MainLayout({ children }) {
     };
   }, [closeDrawer, drawerOpen]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isTypingTarget = tag === 'input' || tag === 'textarea' || target?.isContentEditable;
+      if (isTypingTarget) return;
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        openCommandTerminal();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [openCommandTerminal]);
+
   const navLinks = primaryNavItems.map(({ label, hash }) => ({ label, hash }));
 
   const noticeToneClass = systemNotice ? {
@@ -299,7 +317,7 @@ export default function MainLayout({ children }) {
   }, [navigateTo, closeDrawer]);
 
   return (
-    <div className={`${styles.container} ${isInverted ? styles.inverted : ''} ${isNightWatch ? styles.nightWatch : ''}`}>
+    <div className={`${styles.container} ${isInverted ? styles.inverted : ''} ${isNightWatch ? styles.nightWatch : ''} ${archiveLayerActive ? styles.archiveLayerActive : ''}`}>
 
 
       <div className={styles.leftDotMatrix}></div>
@@ -329,6 +347,8 @@ export default function MainLayout({ children }) {
           <span>{systemNotice.text}</span>
         </div>
       )}
+
+      {mainVisible && <CommandTerminal />}
 
       {/* 汉堡菜单按钮 (仅平板端，移动端由底部功能栏替代) */}
       {mainVisible && (

@@ -245,6 +245,7 @@ function BlogDetailContent({ meta, mdxSource, allPosts }: BlogPostPageProps) {
       : readingProgress >= 0.33
         ? 'SIGNAL RISING'
         : 'SIGNAL SEEKING';
+  const readerCoordinate = `${activeNav.toUpperCase()} // ${String(readingPercent).padStart(3, '0')}%`;
   const renderReadingSignal = (labelPrefix = 'Reading progress') => (
     <div
       className={`${styles.readingSignal} ${readingProgress >= 0.97 ? styles.complete : ''}`}
@@ -401,6 +402,11 @@ function BlogDetailContent({ meta, mdxSource, allPosts }: BlogPostPageProps) {
       {/* ===== RIGHT NAV ===== */}
       <nav className={`${styles.rightNav} ${isPastHeader ? styles.visible : ''}`} aria-label="Blog detail sections">
         <button type="button" className={styles.rightNavBack} onClick={handleBack} data-cursor-label="BACK" aria-label="BACK" />
+        <div className={styles.rightNavDivider} />
+        <div className={styles.readerCoordinate} aria-live="polite">
+          <span>READER COORDINATE</span>
+          <strong>{readerCoordinate}</strong>
+        </div>
         <div className={styles.rightNavDivider} />
         {renderReadingSignal()}
         <div className={styles.rightNavDivider} />

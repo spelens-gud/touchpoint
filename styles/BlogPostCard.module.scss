@@ -1,5 +1,106 @@
 /* styles/BlogPostCard.module.scss — Signal Fragment Card */
 
+.signalFilter {
+  width: 100%;
+  border: 1px solid rgba(var(--ark-border-rgb), 0.42);
+  background:
+    linear-gradient(90deg, rgba(var(--ark-primary-rgb), 0.055), transparent 68%),
+    rgba(var(--ark-dark-blue-rgb), 0.32);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.signalFilterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ark-primary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.signalFilterInput {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+
+  span {
+    color: var(--ark-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+  }
+
+  input {
+    min-width: 0;
+    border: 1px solid rgba(var(--ark-border-rgb), 0.4);
+    background: rgba(0, 0, 0, 0.16);
+    color: var(--ark-text);
+    padding: 8px 10px;
+    font-family: var(--font-hud);
+    font-size: var(--fs-base);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    outline: none;
+
+    &:focus {
+      border-color: var(--ark-primary);
+    }
+  }
+
+  button {
+    border: 1px solid rgba(var(--ark-primary-rgb), 0.45);
+    background: transparent;
+    color: var(--ark-primary);
+    padding: 8px 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+  }
+}
+
+.signalFilterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+
+  button {
+    border: 1px solid rgba(var(--ark-border-rgb), 0.38);
+    background: transparent;
+    color: var(--ark-text-secondary);
+    padding: 5px 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus-visible,
+    &.activeTag {
+      border-color: var(--ark-primary);
+      background: var(--ark-primary);
+      color: var(--ark-dark-blue);
+      outline: none;
+    }
+  }
+}
+
+.signalEmpty {
+  border: 1px dashed rgba(var(--ark-border-rgb), 0.5);
+  color: var(--ark-text-secondary);
+  padding: 28px 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .card {
   position: relative;
   display: flex;
@@ -220,6 +321,16 @@
 
 // ===== Responsive =====
 @media (max-width: 767px) {
+  .signalFilterHeader,
+  .signalFilterInput {
+    grid-template-columns: 1fr;
+  }
+
+  .signalFilterHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .cardInner {
     padding: 16px 16px 16px 14px;
     gap: 12px;

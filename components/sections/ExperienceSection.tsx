@@ -1,4 +1,5 @@
 import styles from '../../styles/Home.module.scss';
+import { useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { ExperienceItem } from '../../types';
 
@@ -7,6 +8,8 @@ export default function ExperienceSection({
   experienceData,
   handleExperienceItemClick,
 }) {
+  const [selectedMission, setSelectedMission] = useState<ExperienceItem>(experienceData[0]);
+
   const handleTimelineKeyDown = (event: KeyboardEvent<HTMLDivElement>, item: ExperienceItem) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
@@ -16,6 +19,36 @@ export default function ExperienceSection({
   return (
     <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}>
       <h2 className={styles.experienceTitleWithBackground}>EXPERIENCE</h2>
+      {selectedMission && (
+        <aside className={styles.missionReplay} aria-live="polite">
+          <div className={styles.missionReplayHeader}>
+            <span>MISSION REPLAY</span>
+            <strong>{selectedMission.duration}</strong>
+          </div>
+          <div className={styles.missionReplayBody}>
+            <div>
+              <span className={styles.missionReplayType}>{selectedMission.type}</span>
+              <h3>{selectedMission.title}</h3>
+              <p>{selectedMission.location}</p>
+            </div>
+            <ol className={styles.missionObjectives}>
+              {selectedMission.details.map((detail, index) => (
+                <li key={`${selectedMission.id}-${index}`}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <p>{detail}</p>
+                </li>
+              ))}
+            </ol>
+            <button
+              type="button"
+              className={styles.missionReplayOpen}
+              onClick={(event) => handleExperienceItemClick(selectedMission, event)}
+            >
+              OPEN FULL RECORD
+            </button>
+          </div>
+        </aside>
+      )}
       <div className={styles.experienceTimeline}>
         {experienceData.map((item, index) => (
           <div
@@ -24,8 +57,11 @@ export default function ExperienceSection({
               ${styles.timelineItem}
               ${item.alignment === 'left' ? styles.timelineItemLeft : styles.timelineItemRight}
               ${item.type === 'education' ? styles.educationItem : ''}
+              ${selectedMission?.id === item.id ? styles.timelineItemActive : ''}
             `}
             onClick={(e) => handleExperienceItemClick(item, e)}
+            onMouseEnter={() => setSelectedMission(item)}
+            onFocus={() => setSelectedMission(item)}
             onKeyDown={(e) => handleTimelineKeyDown(e, item)}
             role="button"
             tabIndex={0}

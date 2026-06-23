@@ -187,6 +187,12 @@ export interface AppContextValue
     ColumnHoverState {
   systemNotice: SystemNotice | null;
   pushSystemNotice: (text: string, tone?: SystemNotice['tone']) => void;
+  archiveLayerActive: boolean;
+  setArchiveLayerActive: (active: boolean) => void;
+  toggleArchiveLayer: () => void;
+  commandTerminalOpen: boolean;
+  openCommandTerminal: () => void;
+  closeCommandTerminal: () => void;
 }
 
 // ============================================================

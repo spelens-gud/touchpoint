@@ -390,6 +390,36 @@
   opacity: 0.4;
 }
 
+.readerCoordinate {
+  width: 160px;
+  padding: 9px 10px;
+  border: 1px solid rgba(var(--ark-border-rgb), 0.45);
+  background: rgba(var(--ark-secondary-rgb, 30, 40, 55), 0.18);
+  backdrop-filter: blur(4px);
+  display: grid;
+  gap: 4px;
+  text-align: right;
+  pointer-events: none;
+
+  span {
+    color: var(--ark-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.68;
+  }
+
+  strong {
+    color: var(--ark-primary);
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+}
+
 .readingSignal {
   width: 160px;
   padding: 10px;

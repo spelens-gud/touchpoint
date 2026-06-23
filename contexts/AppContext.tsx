@@ -31,6 +31,8 @@ export function AppProvider({ children }: AppProviderProps) {
   } = power;
 
   const [systemNotice, setSystemNotice] = useState<SystemNotice | null>(null);
+  const [archiveLayerActive, setArchiveLayerActiveState] = useState(false);
+  const [commandTerminalOpen, setCommandTerminalOpen] = useState(false);
   const noticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const noticeQueueRef = useRef<SystemNotice[]>([]);
   const noticeVisibleRef = useRef(false);
@@ -66,6 +68,34 @@ export function AppProvider({ children }: AppProviderProps) {
     showQueuedNotice();
   }, [showQueuedNotice]);
 
+  const setArchiveLayerActive = useCallback((active: boolean) => {
+    let changed = false;
+    setArchiveLayerActiveState((current) => {
+      changed = current !== active;
+      return active;
+    });
+    if (changed) {
+      pushSystemNotice(active ? 'ARCHIVE LAYER EXPOSED' : 'ARCHIVE LAYER SEALED', active ? 'success' : 'info');
+    }
+  }, [pushSystemNotice]);
+
+  const toggleArchiveLayer = useCallback(() => {
+    let next = false;
+    setArchiveLayerActiveState((current) => {
+      next = !current;
+      return next;
+    });
+    pushSystemNotice(next ? 'ARCHIVE LAYER EXPOSED' : 'ARCHIVE LAYER SEALED', next ? 'success' : 'info');
+  }, [pushSystemNotice]);
+
+  const openCommandTerminal = useCallback(() => {
+    setCommandTerminalOpen(true);
+  }, []);
+
+  const closeCommandTerminal = useCallback(() => {
+    setCommandTerminalOpen(false);
+  }, []);
+
   useEffect(() => {
     return () => {
       if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
@@ -89,9 +119,13 @@ export function AppProvider({ children }: AppProviderProps) {
       pushSystemNotice('DISCHARGE SEQUENCE RUNNING', 'info');
     } else {
       pushSystemNotice('DISCHARGE SEQUENCE ARMED', 'warning');
+      if (!archiveLayerActive) {
+        setArchiveLayerActiveState(true);
+        pushSystemNotice('ARCHIVE LAYER EXPOSED', 'success');
+      }
     }
     handleDischargeLeverPull();
-  }, [handleDischargeLeverPull, isDischarging, powerLevel, pushSystemNotice]);
+  }, [archiveLayerActive, handleDischargeLeverPull, isDischarging, powerLevel, pushSystemNotice]);
 
   const deactivateTesseractWithNotice = useCallback(() => {
     if (isTesseractActivated) {
@@ -132,6 +166,12 @@ export function AppProvider({ children }: AppProviderProps) {
     deactivateTesseract: deactivateTesseractWithNotice,
     systemNotice,
     pushSystemNotice,
+    archiveLayerActive,
+    setArchiveLayerActive,
+    toggleArchiveLayer,
+    commandTerminalOpen,
+    openCommandTerminal,
+    closeCommandTerminal,
     // Stats
     currentTime, runtime, totalVisits, currentVisitors,
     // Typing
@@ -148,6 +188,8 @@ export function AppProvider({ children }: AppProviderProps) {
     powerLevel, isInverted, isTesseractActivated, isDischarging,
     chargeBattery, handleDischargeLeverPullWithNotice, handleActivateTesseractWithNotice, deactivateTesseractWithNotice,
     systemNotice, pushSystemNotice,
+    archiveLayerActive, setArchiveLayerActive, toggleArchiveLayer,
+    commandTerminalOpen, openCommandTerminal, closeCommandTerminal,
     currentTime, runtime, totalVisits, currentVisitors,
     displayedFateText, isFateTypingActive,
     displayedEnvParams, isEnvParamsTyping, envData, envDataVersion,

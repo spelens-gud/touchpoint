@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from '../../styles/Home.module.scss';
 import ProjectCard from '../cards/ProjectCard';
 
@@ -29,6 +29,22 @@ export default function LifeSection({
   ];
 
   const [alsoPlayExpanded, setAlsoPlayExpanded] = useState(false);
+  const [selectedFragmentId, setSelectedFragmentId] = useState<string | null>(null);
+  const activeFragments = useMemo(() => {
+    if (activeLifeTab === 'game') return gameData;
+    if (activeLifeTab === 'travel') return travelData;
+    if (activeLifeTab === 'other') return otherData;
+    return [];
+  }, [activeLifeTab, gameData, otherData, travelData]);
+  const selectedFragment = activeFragments.find((item) => item.id === selectedFragmentId) || activeFragments[0];
+  const coordinates = [
+    { x: 16, y: 62 },
+    { x: 36, y: 24 },
+    { x: 58, y: 52 },
+    { x: 78, y: 31 },
+    { x: 86, y: 72 },
+    { x: 48, y: 78 },
+  ];
 
   return (
     <div
@@ -63,6 +79,43 @@ export default function LifeSection({
           Other
         </button>
       </div>
+      {activeFragments.length > 0 && (
+        <div className={styles.lifeStarMap} aria-label={`${activeLifeTab} fragment map`}>
+          <svg className={styles.lifeConstellationLines} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline
+              points={activeFragments.map((_, index) => {
+                const coord = coordinates[index % coordinates.length];
+                return `${coord.x},${coord.y}`;
+              }).join(' ')}
+            />
+          </svg>
+          {activeFragments.map((item, index) => {
+            const coord = coordinates[index % coordinates.length];
+            const isActive = selectedFragment?.id === item.id;
+            return (
+              <button
+                type="button"
+                key={item.id}
+                className={`${styles.lifeStarNode} ${isActive ? styles.lifeStarNodeActive : ''}`}
+                style={{ left: `${coord.x}%`, top: `${coord.y}%` }}
+                onMouseEnter={() => setSelectedFragmentId(item.id)}
+                onFocus={() => setSelectedFragmentId(item.id)}
+                onClick={() => handleLifeItemClick(item)}
+                aria-label={`Open life fragment: ${item.title}`}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </button>
+            );
+          })}
+          {selectedFragment && (
+            <div className={styles.lifeStarMeta}>
+              <span>{activeLifeTab.toUpperCase()} FRAGMENT</span>
+              <strong>{selectedFragment.title}</strong>
+              <p>{selectedFragment.description}</p>
+            </div>
+          )}
+        </div>
+      )}
       <div ref={lifeContentAreaRef} className={styles.lifeContentArea}>
         {/* Game Tab */}
         <div ref={lifeGameTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>

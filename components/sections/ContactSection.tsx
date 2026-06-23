@@ -4,18 +4,29 @@ export default function ContactSection({
   contactSectionRef,
   handleCopyEmail,
   emailCopyFeedback,
+  contactHandshakePhase,
   handleShowFriendLinks,
 }) {
+  const handshakeLabel = {
+    idle: 'HANDSHAKE IDLE',
+    ping: 'PING OUTPOST',
+    channel: 'CHANNEL OPEN',
+    copied: 'COORDINATES COPIED',
+    error: 'LINK FAILURE',
+  }[contactHandshakePhase || 'idle'];
+
   return (
-    <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}>
+    <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection} ${contactHandshakePhase && contactHandshakePhase !== 'idle' ? styles.contactHandshaking : ''} ${contactHandshakePhase === 'copied' ? styles.contactSignalConfirmed : ''} ${contactHandshakePhase === 'error' ? styles.contactSignalError : ''}`}>
       <h2>CONTACT</h2>
       {/* Radar animation — part of the HUD design, not a replaceable image */}
       <div className={styles.radarDisplay} aria-hidden="true">
         <div className={styles.scanner}></div>
+        <div className={styles.handshakeBeam}></div>
         <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
         <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple1}`}></div>
         <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple2}`}></div>
         <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple3}`}></div>
+        <div className={styles.handshakeStatus}>{handshakeLabel}</div>
       </div>
 
       {/* Email — Replace with your own */}

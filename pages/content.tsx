@@ -12,6 +12,7 @@ import BlogSection from '../components/sections/BlogSection';
 import LifeSection from '../components/sections/LifeSection';
 import ContactSection from '../components/sections/ContactSection';
 import AboutSection from '../components/sections/AboutSection';
+import ContentRadar from '../components/interactive/ContentRadar';
 
 import WorkDetailView from '../components/detail/WorkDetailView';
 import ExperienceDetailView from '../components/detail/ExperienceDetailView';
@@ -40,6 +41,8 @@ type EmailCopyFeedback = {
   token: number;
   tone: 'success' | 'error';
 };
+
+type ContactHandshakePhase = 'idle' | 'ping' | 'channel' | 'copied' | 'error';
 
 type DetailMode =
   | { type: 'none' }
@@ -83,8 +86,10 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
   // --- Contact state ---
   const contactSectionRef = useRef<HTMLDivElement>(null);
   const [emailCopyFeedback, setEmailCopyFeedback] = useState<EmailCopyFeedback | null>(null);
+  const [contactHandshakePhase, setContactHandshakePhase] = useState<ContactHandshakePhase>('idle');
   const emailCopyCountRef = useRef(0);
   const emailCopyFeedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contactHandshakeTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // --- About state ---
   const aboutSectionRef = useRef<HTMLDivElement>(null);
@@ -121,6 +126,7 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
       if (emailCopyFeedbackTimerRef.current) {
         clearTimeout(emailCopyFeedbackTimerRef.current);
       }
+      contactHandshakeTimersRef.current.forEach((timer) => clearTimeout(timer));
     };
   }, []);
 
@@ -204,6 +210,13 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
   }, []);
 
   const handleCopyEmail = useCallback(() => {
+    contactHandshakeTimersRef.current.forEach((timer) => clearTimeout(timer));
+    contactHandshakeTimersRef.current = [];
+    setContactHandshakePhase('ping');
+    contactHandshakeTimersRef.current.push(setTimeout(() => {
+      setContactHandshakePhase('channel');
+    }, 260));
+
     navigator.clipboard.writeText('your-email@example.com').then(() => {
       emailCopyCountRef.current += 1;
       const nextToken = emailCopyCountRef.current;
@@ -211,9 +224,17 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
         ? 'YOU ALREADY HAVE THE COORDINATES'
         : EMAIL_COPY_RECEIPTS[Math.floor(Math.random() * EMAIL_COPY_RECEIPTS.length)];
 
+      setContactHandshakePhase('copied');
+      contactHandshakeTimersRef.current.push(setTimeout(() => {
+        setContactHandshakePhase('idle');
+      }, 1800));
       showEmailCopyFeedback({ message, token: nextToken, tone: 'success' });
     }).catch(err => {
       console.error('Failed to copy email:', err);
+      setContactHandshakePhase('error');
+      contactHandshakeTimersRef.current.push(setTimeout(() => {
+        setContactHandshakePhase('idle');
+      }, 2200));
       showEmailCopyFeedback({
         message: EMAIL_COPY_FAILURE_RECEIPT,
         token: Date.now(),
@@ -223,6 +244,10 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
   }, [showEmailCopyFeedback]);
 
   const handleShowFriendLinks = useCallback(() => {
+    setContactHandshakePhase('channel');
+    contactHandshakeTimersRef.current.push(setTimeout(() => {
+      setContactHandshakePhase('idle');
+    }, 1200));
     navigateTo('/friends');
   }, [navigateTo]);
 
@@ -339,6 +364,7 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
             contactSectionRef={contactSectionRef}
             handleCopyEmail={handleCopyEmail}
             emailCopyFeedback={emailCopyFeedback}
+            contactHandshakePhase={contactHandshakePhase}
             handleShowFriendLinks={handleShowFriendLinks}
           />
         </div>
@@ -374,6 +400,7 @@ export default function ContentPage({ blogPosts }: ContentPageProps) {
           {detail.type === 'life' && <LifeDetailView item={detail.item} />}
         </div>
       )}
+      {!isDetailMounted && <ContentRadar scrollContainerRef={scrollContainerRef} />}
     </>
   );
 }

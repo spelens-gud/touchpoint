@@ -49,14 +49,18 @@
   --transition-fast: 0.3s cubic-bezier(0.6, 0.05, 0.01, 0.9);
 
   --ark-primary: rgba(200, 200, 200, 0.8);
+  --ark-primary-rgb: 200, 200, 200;
   --ark-primary-glow: rgba(150, 150, 150, 0.5);
   --ark-accent: rgba(220, 220, 220, 1);
   --ark-dark-blue: #1a1a1a;
+  --ark-dark-blue-rgb: 26, 26, 26;
   --ark-border: rgba(255, 255, 255, 0.15);
+  --ark-border-rgb: 255, 255, 255;
   --ark-text: rgba(230, 230, 230, 0.9);
   --ark-bg-dark: #1a1a1a;
   --ark-highlight: rgba(255, 255, 255, 0.85);
   --ark-highlight-green: #b2f2bb;
+  --ark-highlight-green-rgb: 178, 242, 187;
   --focus-ring: var(--ark-highlight-green);
   --focus-ring-shadow: rgba(178, 242, 187, 0.18);
 
